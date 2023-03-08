@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/MealItem.dart';
 import '../dummy_data.dart';
 
 class CategoryMealsScreen extends StatefulWidget {
@@ -21,8 +22,12 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
       ),
       body: ListView.builder(
         itemBuilder: (ctx, idx) {
-          return Text(categoryMeals[idx].title,
-              style: Theme.of(context).textTheme.headline6);
+          return MealItem(
+              imageUrl: categoryMeals[idx].imageUrl,
+              title: categoryMeals[idx].title,
+              duration: categoryMeals[idx].duration,
+              complexity: categoryMeals[idx].complexity,
+              affordability: categoryMeals[idx].affordability);
         },
         itemCount: categoryMeals.length,
       ),
