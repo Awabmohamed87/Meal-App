@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../models/meal.dart';
+import 'package:meal_app/widgets/main_drawer.dart';
 import '../widgets/MealItem.dart';
 import '../dummy_data.dart';
 
@@ -9,13 +11,19 @@ class CategoryMealsScreen extends StatefulWidget {
 }
 
 class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
+  List<Meal> categoryMeals;
+  Map<String, String> args;
   @override
-  Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context).settings.arguments as Map<String, String>;
-    final categoryMeals = DUMMY_MEALS
+  void didChangeDependencies() {
+    args = ModalRoute.of(context).settings.arguments as Map<String, String>;
+    categoryMeals = DUMMY_MEALS
         .where((element) => element.categories.contains(args['id']))
         .toList();
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(args['title'] + " Receipes"),
@@ -28,10 +36,16 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
               id: categoryMeals[idx].id,
               duration: categoryMeals[idx].duration,
               complexity: categoryMeals[idx].complexity,
-              affordability: categoryMeals[idx].affordability);
+              affordability: categoryMeals[idx].affordability,
+              removeMeal: (id) {
+                setState(() {
+                  categoryMeals.removeWhere((element) => element.id == id);
+                });
+              });
         },
         itemCount: categoryMeals.length,
       ),
+      drawer: MainDrawer(),
     );
   }
 }
