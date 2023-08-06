@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:meal_app/dummy_data.dart';
+import 'package:meal_app/providers/meal_provider.dart';
+import 'package:provider/provider.dart';
 
 class MealDetailScreen extends StatelessWidget {
   static const routeName = "meal_detail_screen";
-  final Function _toggleFavourites;
-  final Function _isFavourite;
-
-  MealDetailScreen(this._isFavourite, this._toggleFavourites);
+  const MealDetailScreen({super.key});
 
   Widget buildSectionTitle(context, String str) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: Text(
         str,
-        style: Theme.of(context).textTheme.headline6,
+        style: Theme.of(context).textTheme.titleLarge,
       ),
     );
   }
@@ -26,15 +25,15 @@ class MealDetailScreen extends StatelessWidget {
           color: Colors.white,
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(10)),
-      margin: EdgeInsets.all(5),
-      padding: EdgeInsets.all(5),
+      margin: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: child,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    var id = ModalRoute.of(context).settings.arguments as String;
+    var id = ModalRoute.of(context)!.settings.arguments as String;
     final selectedMeal = DUMMY_MEALS.firstWhere((element) => element.id == id);
     return Scaffold(
       appBar: AppBar(
@@ -43,7 +42,7 @@ class MealDetailScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 300,
               width: double.infinity,
               child: Image.network(
@@ -55,10 +54,10 @@ class MealDetailScreen extends StatelessWidget {
             buildBox(ListView.builder(
               itemBuilder: (ctx, index) {
                 return Card(
-                  color: Color.fromRGBO(236, 236, 236, 1),
+                  color: const Color.fromRGBO(236, 236, 236, 1),
                   child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
                       child: Text(selectedMeal.ingredients[index])),
                 );
               },
@@ -76,7 +75,7 @@ class MealDetailScreen extends StatelessWidget {
                         ),
                         title: Text(selectedMeal.steps[index]),
                       ),
-                      Divider(),
+                      const Divider(),
                     ],
                   );
                 },
@@ -89,10 +88,13 @@ class MealDetailScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
-          _toggleFavourites(selectedMeal.id);
+          Provider.of<MealProvider>(context, listen: false)
+              .toggleFavourites(selectedMeal.id);
         },
         child: Icon(
-          _isFavourite(selectedMeal.id) ? Icons.star : Icons.star_border,
+          Provider.of<MealProvider>(context).isFavourite(selectedMeal.id)
+              ? Icons.star
+              : Icons.star_border,
           color: Colors.white,
         ),
       ),

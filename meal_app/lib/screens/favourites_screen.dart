@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import '../widgets/MealItem.dart';
+import 'package:meal_app/providers/meal_provider.dart';
+import 'package:provider/provider.dart';
+import '../widgets/meal_item.dart';
 import '../widgets/main_drawer.dart';
-import '../models/meal.dart';
 
 class FavouritesScreen extends StatefulWidget {
-  final List<Meal> _favouriteMeals;
-
-  const FavouritesScreen(this._favouriteMeals);
+  const FavouritesScreen({super.key});
 
   @override
-  _FavouritesScreenState createState() => _FavouritesScreenState();
+  FavouritesScreenState createState() => FavouritesScreenState();
 }
 
-class _FavouritesScreenState extends State<FavouritesScreen> {
+class FavouritesScreenState extends State<FavouritesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,22 +19,32 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
       body: ListView.builder(
         itemBuilder: (ctx, idx) {
           return MealItem(
-              imageUrl: widget._favouriteMeals[idx].imageUrl,
-              title: widget._favouriteMeals[idx].title,
-              id: widget._favouriteMeals[idx].id,
-              duration: widget._favouriteMeals[idx].duration,
-              complexity: widget._favouriteMeals[idx].complexity,
-              affordability: widget._favouriteMeals[idx].affordability,
+              imageUrl: Provider.of<MealProvider>(context)
+                  .favouriteMeals[idx]
+                  .imageUrl,
+              title:
+                  Provider.of<MealProvider>(context).favouriteMeals[idx].title,
+              id: Provider.of<MealProvider>(context).favouriteMeals[idx].id,
+              duration: Provider.of<MealProvider>(context)
+                  .favouriteMeals[idx]
+                  .duration,
+              complexity: Provider.of<MealProvider>(context)
+                  .favouriteMeals[idx]
+                  .complexity,
+              affordability: Provider.of<MealProvider>(context)
+                  .favouriteMeals[idx]
+                  .affordability,
               removeMeal: (id) {
                 setState(() {
-                  widget._favouriteMeals
+                  Provider.of<MealProvider>(context)
+                      .favouriteMeals
                       .removeWhere((element) => element.id == id);
                 });
               });
         },
-        itemCount: widget._favouriteMeals.length,
+        itemCount: Provider.of<MealProvider>(context).favouriteMeals.length,
       ),
-      drawer: MainDrawer(),
+      drawer: const MainDrawer(),
     );
   }
 }

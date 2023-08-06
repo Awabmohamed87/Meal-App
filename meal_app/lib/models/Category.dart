@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
 class Category {
@@ -6,5 +8,5 @@ class Category {
   final Color color;
 
   const Category(
-      {@required this.id, @required this.title, this.color = Colors.lightBlue});
+      {required this.id, required this.title, this.color = Colors.lightBlue});
 }

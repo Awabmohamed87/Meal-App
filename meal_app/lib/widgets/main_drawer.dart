@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import '../screens/filter_screen.dart';
 
 class MainDrawer extends StatelessWidget {
-  Widget buildTile(String title, IconData icon, Function tapHandler) {
+  const MainDrawer({super.key});
+
+  Widget buildTile(String title, IconData icon, Function() tapHandler) {
     return ListTile(
       leading: Icon(
         icon,
         size: 26,
       ),
       title: Text(title,
-          style: TextStyle(
+          style: const TextStyle(
               fontSize: 24,
               fontFamily: 'RobotoCondensed',
               fontWeight: FontWeight.bold)),
@@ -25,8 +27,8 @@ class MainDrawer extends StatelessWidget {
           Container(
             height: 120,
             width: double.infinity,
-            padding: EdgeInsets.all(20),
-            color: Color.fromRGBO(220, 220, 220, 1),
+            padding: const EdgeInsets.all(20),
+            color: const Color.fromRGBO(220, 220, 220, 1),
             alignment: Alignment.centerLeft,
             child: Text(
               'Meal App',
@@ -36,7 +38,7 @@ class MainDrawer extends StatelessWidget {
                   color: Theme.of(context).primaryColor),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           buildTile("Meal", Icons.restaurant, () {
             Navigator.of(context).pushReplacementNamed('/');
           }),
