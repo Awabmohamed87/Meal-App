@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:meal_app/screens/meal_details_screen.dart';
 import '../models/meal.dart';
@@ -78,11 +77,11 @@ class MealItem extends StatelessWidget {
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15),
                   ),
-                  child: CachedNetworkImage(
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    imageUrl: imageUrl,
-                    errorWidget: (context, url, error) => const Text('error'),
+                  child: Hero(
+                    tag: id,
+                    child: FadeInImage(
+                        placeholder: const AssetImage('Images/a2.png'),
+                        image: NetworkImage(imageUrl)),
                   ),
                 ),
                 Positioned(
@@ -112,7 +111,10 @@ class MealItem extends StatelessWidget {
                     children: [
                       const Icon(Icons.schedule),
                       const SizedBox(width: 5),
-                      Text("$duration min"),
+                      Text(
+                        "$duration min",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ],
                   ),
                   Row(children: [

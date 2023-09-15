@@ -19,14 +19,14 @@ class MealDetailScreen extends StatelessWidget {
 
   Widget buildBox(Widget child) {
     return Container(
-      height: 150,
+      height: 200,
       width: 350,
       decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(10)),
-      margin: const EdgeInsets.all(5),
-      padding: const EdgeInsets.all(5),
+      margin: const EdgeInsets.only(right: 5, bottom: 5, left: 5),
+      padding: const EdgeInsets.only(right: 5, bottom: 5, left: 5),
       child: child,
     );
   }
@@ -36,54 +36,119 @@ class MealDetailScreen extends StatelessWidget {
     var id = ModalRoute.of(context)!.settings.arguments as String;
     final selectedMeal = DUMMY_MEALS.firstWhere((element) => element.id == id);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(selectedMeal.title),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 300,
-              width: double.infinity,
-              child: Image.network(
-                selectedMeal.imageUrl,
-                fit: BoxFit.cover,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            title: Text(selectedMeal.title),
+            pinned: true,
+            expandedHeight: 300,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Hero(
+                tag: id,
+                child: InteractiveViewer(
+                  child: SizedBox(
+                    height: 300,
+                    width: double.infinity,
+                    child: Image.network(
+                      selectedMeal.imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
               ),
             ),
-            buildSectionTitle(context, "Ingredients"),
-            buildBox(ListView.builder(
-              itemBuilder: (ctx, index) {
-                return Card(
-                  color: const Color.fromRGBO(236, 236, 236, 1),
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                      child: Text(selectedMeal.ingredients[index])),
-                );
-              },
-              itemCount: selectedMeal.ingredients.length,
-            )),
-            buildSectionTitle(context, "Steps"),
-            buildBox(
-              ListView.builder(
-                itemBuilder: (ctx, index) {
-                  return Column(
+          ),
+          SliverList(
+              delegate: SliverChildListDelegate([
+            MediaQuery.of(context).orientation == Orientation.portrait
+                ? Column(
                     children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          child: Text("# ${index + 1}"),
+                      buildSectionTitle(context, "Ingredients"),
+                      buildBox(ListView.builder(
+                        padding: const EdgeInsets.all(0),
+                        itemBuilder: (ctx, index) {
+                          return Card(
+                            color: const Color.fromRGBO(236, 236, 236, 1),
+                            child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                child: Text(selectedMeal.ingredients[index])),
+                          );
+                        },
+                        itemCount: selectedMeal.ingredients.length,
+                      )),
+                      buildSectionTitle(context, "Steps"),
+                      buildBox(
+                        ListView.builder(
+                          padding: const EdgeInsets.all(0),
+                          itemBuilder: (ctx, index) {
+                            return Column(
+                              children: [
+                                ListTile(
+                                  leading: CircleAvatar(
+                                    child: Text("# ${index + 1}"),
+                                  ),
+                                  title: Text(selectedMeal.steps[index]),
+                                ),
+                                const Divider(),
+                              ],
+                            );
+                          },
+                          itemCount: selectedMeal.steps.length,
                         ),
-                        title: Text(selectedMeal.steps[index]),
                       ),
-                      const Divider(),
                     ],
-                  );
-                },
-                itemCount: selectedMeal.steps.length,
-              ),
-            ),
-          ],
-        ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          buildSectionTitle(context, "Ingredients"),
+                          buildBox(ListView.builder(
+                            padding: const EdgeInsets.all(0),
+                            itemBuilder: (ctx, index) {
+                              return Card(
+                                color: const Color.fromRGBO(236, 236, 236, 1),
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                    child:
+                                        Text(selectedMeal.ingredients[index])),
+                              );
+                            },
+                            itemCount: selectedMeal.ingredients.length,
+                          )),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          buildSectionTitle(context, "Steps"),
+                          buildBox(
+                            ListView.builder(
+                              padding: const EdgeInsets.all(0),
+                              itemBuilder: (ctx, index) {
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      leading: CircleAvatar(
+                                        child: Text("# ${index + 1}"),
+                                      ),
+                                      title: Text(selectedMeal.steps[index]),
+                                    ),
+                                    const Divider(),
+                                  ],
+                                );
+                              },
+                              itemCount: selectedMeal.steps.length,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  )
+          ]))
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,

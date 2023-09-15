@@ -16,7 +16,12 @@ class FavouritesScreenState extends State<FavouritesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: null,
-      body: ListView.builder(
+      body: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 400,
+            childAspectRatio: 1.15,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20),
         itemBuilder: (ctx, idx) {
           return MealItem(
               imageUrl: Provider.of<MealProvider>(context)
